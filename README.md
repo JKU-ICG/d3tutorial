@@ -1054,10 +1054,7 @@ Custom Transition: [mcv05_transitions.html](examples/mcv05_transitions.html) ([O
 
 ---
 
-
----
-
-**INTERACTIVE**
+**FINAL SOLUTION**
 
 Final Outcome: [mcv06_final.html](examples/mcv06_final.html) ([Open in CodePen](https://codepen.io/sgratzl/pen/yLLBBPx))
 
