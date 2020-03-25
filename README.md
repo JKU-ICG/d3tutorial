@@ -894,9 +894,7 @@ Animated filter: [barchart06_interactive.html](examples/barchart06_interactive.h
 
 ---
 
----
-
-**INTERACTIVE**
+**FINAL SOLUTION**
 
 Final results [barchart07_final.html](examples/barchart07_final.html) ([Open in CodePen](https://codepen.io/thinkh/pen/YZgObZ))
 
