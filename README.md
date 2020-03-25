@@ -529,7 +529,7 @@ The basic idea of D3 is binding data items to DOM elements and manipulate them a
 
 ![D3 Data Join Set Relationship](i/join_types.png)
 
-For each of the cases we have to tell D3 what to do. e.g. when we have more data items than DOM elements, we are in the *enter* phase and need to specify a way how to create the remaining ones. Similarly if we more DOM elements than data items we are in the *exit* phase and need to take care of removing the superfluous ones.
+For each of the cases we have to tell D3 what to do. e.g. when we have more data items than DOM elements, we are in the *enter* phase and need to specify a way how to create the remaining ones. Similarly if we have more DOM elements than data items we are in the *exit* phase and need to take care of removing the superfluous ones.
 
 Basic workflow:
 
