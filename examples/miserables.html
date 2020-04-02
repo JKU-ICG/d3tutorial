@@ -50,6 +50,7 @@
 
     /////////////////////////
 
+    // compare https://github.com/d3/d3-force
     const simulation = d3.forceSimulation()
       .force('link', d3.forceLink().id((d) => d.id))
       .force('charge', d3.forceManyBody())
@@ -59,12 +60,13 @@
 
     d3.json('miserables.json').then((data) => {
 
-      // Links data join
+      // 1. Create Links & Nodes
+      // 1.1 Links data join
       const link = svg.selectAll('.link').data(data.links).join(
         (enter) => enter.append('line').attr('class', 'link')
       );
 
-      // Nodes data join
+      // 1.2 Nodes data join
       const node = svg.selectAll('.node').data(data.nodes).join(
         (enter) => {
           const node_enter = enter.append('circle')
@@ -75,8 +77,10 @@
         }
       );
 
+      // 2. Update: Style new and existing the nodes
       node.style('fill', (d) => color(d.group));
 
+      // 3. Apply force
       simulation
         .nodes(data.nodes)
         .force('link').links(data.links);
