@@ -198,13 +198,12 @@
           // new elements
           (enter) => {
             const path_enter = enter.append('path');
-            // TODO register click handler to change selected sex in state and call updateApp()
             path_enter.append('title');
             path_enter.on('click', (d) => {
-              if (state.selectedSex === d.data.key) {
-                state.selectedSex = null;
+              if (state[stateAttr] === d.data.key) {
+                state[stateAttr] = null;
               } else {
-                state.selectedSex = d.data.key;
+                state[stateAttr] = d.data.key;
               }
               updateApp();
             });
@@ -215,8 +214,8 @@
         // ENTER + UPDATE
         // both old and new elements
         path
-          .classed('selected', (d) => d.data.key === state.selectedSex)
-          .attr('d', arc) // TODO set the CSS class `selected` if the current data item is the selected sex in the state
+          .classed('selected', (d) => d.data.key === state[stateAttr])
+          .attr('d', arc)
           .style('fill', (d) => cscale(d.data.key));
 
         path.select('title').text((d) => `${d.data.key}: ${d.data.values.length}`);
