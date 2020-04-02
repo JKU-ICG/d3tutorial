@@ -183,10 +183,6 @@
 
       const pie = d3.pie().value((d) => d.values.length).sortValues(null).sort(null);
       const arc = d3.arc().outerRadius(radius).innerRadius(0);
-      const noSlice = [
-        {startAngle: 0, endAngle: Math.PI * 2, padAngle: 0},
-        {startAngle: 0, endAngle: 0, padAngle: 0}
-      ];
 
       const cscale = d3.scaleOrdinal(colorScheme);
       
@@ -196,7 +192,8 @@
 
         cscale.domain(new_data.map((d) => d.key));
 
-        // DATA JOIN
+        
+        // Store old Data
         const old = g.selectAll('path').data();
 
         function tweenArc(d, i) {
@@ -209,9 +206,9 @@
           // ENTER
           // new elements
           (enter) => {
-            const path_enter = enter.append('path')
-              .attr('d', (d, i) => arc(noSlice[i]))
-              .on('click', (d) => {
+            const path_enter = enter.append('path');
+            path_enter.append('title');
+            path_enter.on('click', (d) => {
                 if (state[stateAttr] === d.data.key) {
                   state[stateAttr] = null;
                 } else {
@@ -219,19 +216,14 @@
                 }
                 updateApp();
               });
-            path_enter.append('title');
             return path_enter;
-          },
-          (update) => update,
-          (exit) => exit.transition()
-            .attrTween('d', tweenArc)
-            .remove()
+          }
         );
 
         // ENTER + UPDATE
         // both old and new elements
         path
-          .classed('selected', (d) => d.data.key === state.selectedSex)
+          .classed('selected', (d) => d.data.key === state[stateAttr])
           .transition()
           .attrTween('d', tweenArc)
           .style('fill', (d) => cscale(d.data.key));

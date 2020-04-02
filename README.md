@@ -906,7 +906,7 @@ Final results [barchart07_final.html](examples/barchart07_final.html) ([Open in 
 <a id="code-structure"></a>
 ## Code Structure
 
-One interactive visualization is nice multiple coordinated ones are better. Combined with filtering and linking and brushing it enables explore datasets in way more detail and discover new insights. Before creating a multiple coordinated view setup a proper code structure helps. A possible way to structure ones code is
+One interactive visualization is nice multiple coordinated ones are better. Combined with filtering and linking and brushing it enables explore datasets in way more detail and discover new insights. Before creating a multiple coordinated view setup a proper code structure helps. A possible way to structure ones code _functionally_ is
 
 ```js
 

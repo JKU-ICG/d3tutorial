@@ -33,13 +33,13 @@
 
     const radius = Math.min(width, height) / 2;
 
-    const color = d3.scaleOrdinal(d3.schemeCategory10);
+    const color = d3.scaleOrdinal(d3.schemeCategory10); // compare https://github.com/d3/d3-scale-chromatic
 
     const arc = d3.arc()
       .outerRadius(radius - 10)
       .innerRadius(0);
 
-    const pie = d3.pie();
+    const pie = d3.pie(); // compare https://github.com/d3/d3-shape#pies
 
     const pied_data = pie(data);
 
