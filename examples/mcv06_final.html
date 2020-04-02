@@ -231,7 +231,7 @@
         // ENTER + UPDATE
         // both old and new elements
         path
-          .classed('selected', (d) => d.data.key === state.selectedSex)
+          .classed('selected', (d) => d.data.key === state[stateAttr])
           .transition()
           .attrTween('d', tweenArc)
           .style('fill', (d) => cscale(d.data.key));
