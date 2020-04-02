@@ -159,6 +159,7 @@
       return update;
     }
 
+    // TODO add parameters that specify the state property and color scheme to use 
     function createPieChart(svgSelector) {
       const margin = 10;
       const radius = 100;
@@ -174,6 +175,7 @@
 
       const pie = d3.pie().value((d) => d.values.length).sortValues(null).sort(null);
       const arc = d3.arc().outerRadius(radius).innerRadius(0);
+      // TODO use the passed color scheme instead
       const cscale = d3.scaleOrdinal(d3.schemeSet3);
 
       
@@ -189,7 +191,7 @@
           // new elements
           (enter) => {
             const path_enter = enter.append('path');
-            // TODO register click handler to change selected sex in state and call updateApp()
+            // TODO Update click handler to handle sex and survival
             path_enter.append('title');
             path_enter.on('click', (d) => {
               if (state.selectedSex === d.data.key) {
@@ -206,7 +208,7 @@
         // ENTER + UPDATE
         // both old and new elements
         path
-        .classed('selected', (d) => d.data.key === state.selectedSex)
+        .classed('selected', (d) => d.data.key === state.selectedSex) // TODO set the CSS class `selected` if the current data item is the selected in the state
           .attr('d', arc) // TODO set the CSS class `selected` if the current data item is the selected sex in the state
           .style('fill', (d) => cscale(d.data.key));
 
