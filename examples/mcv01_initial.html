@@ -164,9 +164,9 @@
     }
 
     function wrangleData(filtered) {
-      const ageHistogram = d3.histogram()
-        .domain([0, 100])
-        .thresholds(10)
+      const ageHistogram = d3.histogram() // bin the data
+        .domain([0, 100]) // minumum age = 0, maximum age = 100
+        .thresholds(10) // split into 10 bins
         .value((d) => d.age);
 
       const ageHistogramData = ageHistogram(filtered);
