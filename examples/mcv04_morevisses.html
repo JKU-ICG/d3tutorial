@@ -58,7 +58,8 @@
     </select>
     <strong>Selected Gender: </strong>
     <span id="selectedSex"></span>
-    <!-- TODO add another selected survived hint -->
+    <strong>Selected Survived </strong>
+    <span id="selectedSurvived"></span>
   </div>
 
   <main>
@@ -70,7 +71,14 @@
       <h3>Age Histogram</h3>
       <svg id="age"></svg>
     </section>
-    <!-- TODO add another fare histogram and survived pie distribution chart-->
+    <section>
+      <h3>Survival Distribution</h3>
+      <svg id="survived"></svg>
+    </section>
+    <section>
+      <h3>Fare Histogram</h3>
+      <svg id="fare"></svg>
+    </section>
   </main>
 
   <script type="text/javascript">
@@ -79,7 +87,7 @@
       data: [],
       passengerClass: "",
       selectedSex: null,
-      // TODO store selected survived state
+      selectedSurvived: null
     };
 
     
@@ -159,8 +167,7 @@
       return update;
     }
 
-    // TODO add parameters that specify the state property and color scheme to use 
-    function createPieChart(svgSelector) {
+    function createPieChart(svgSelector, stateProperty, colorScheme) {
       const margin = 10;
       const radius = 100;
 
@@ -175,8 +182,7 @@
 
       const pie = d3.pie().value((d) => d.values.length).sortValues(null).sort(null);
       const arc = d3.arc().outerRadius(radius).innerRadius(0);
-      // TODO use the passed color scheme instead
-      const cscale = d3.scaleOrdinal(d3.schemeSet3);
+      const cscale = d3.scaleOrdinal(colorScheme);
 
       
       function update(new_data) { //{key: string, values: IPerson[]}[]
@@ -191,13 +197,12 @@
           // new elements
           (enter) => {
             const path_enter = enter.append('path');
-            // TODO Update click handler to handle sex and survival
             path_enter.append('title');
             path_enter.on('click', (d) => {
-              if (state.selectedSex === d.data.key) {
-                state.selectedSex = null;
+              if (state[stateProperty] === d.data.key) {
+                state[stateProperty] = null;
               } else {
-                state.selectedSex = d.data.key;
+                state[stateProperty] = d.data.key;
               }
               updateApp();
             });
@@ -208,8 +213,8 @@
         // ENTER + UPDATE
         // both old and new elements
         path
-        .classed('selected', (d) => d.data.key === state.selectedSex) // TODO set the CSS class `selected` if the current data item is the selected in the state
-          .attr('d', arc) // TODO set the CSS class `selected` if the current data item is the selected sex in the state
+        .classed('selected', (d) => d.data.key === state[stateProperty]) 
+          .attr('d', arc)
           .style('fill', (d) => cscale(d.data.key));
 
         path.select('title').text((d) => `${d.data.key}: ${d.data.values.length}`);
@@ -221,8 +226,9 @@
     /////////////////////////
 
     const ageHistogram = createHistogram('#age');
-    const sexPieChart = createPieChart('#sex');
-    // TODO create two new visualzations for fare and survived
+    const sexPieChart = createPieChart('#sex', "selectedSex", d3.schemeAccent);
+    const fareHistogram = createHistogram('#fare');
+    const survivedChart = createPieChart('#survived', "selectedSurvived", d3.schemeSet3);
     
     function filterData() {
       return state.data.filter((d) => {
@@ -232,7 +238,9 @@
         if (state.selectedSex && d.sex !== state.selectedSex) {
           return false;
         }
-        // TODO apply additional selected survived filter
+        if (state.selectedSurvived && d.survived !== state.selectedSurvived) {
+          return false;
+        }
         return true;
       });
     }
@@ -251,18 +259,31 @@
         values: filtered.filter((d) => d.sex === key)
       }));
 
-      // TODO wrangle also for fare and survived state
+      // wrangle also for fare and survived state
+      
+      const fareHistogram = d3.histogram()
+        .domain([0, d3.max(filtered, (d) => d.fare)])
+        .thresholds(10)
+        .value((d) => d.fare);
 
-      return {ageHistogramData, sexPieData};
+      const fareHistogramData = fareHistogram(filtered);
+
+      const survivedChartData = ['0', '1'].map((key) => ({
+        key,
+        values: filtered.filter((d) => d.survived === key)
+      }));
+
+      return {ageHistogramData, sexPieData, fareHistogramData, survivedChartData};
     }
 
     function updateApp() {
       const filtered = filterData();
             
-      const {ageHistogramData, sexPieData} = wrangleData(filtered);
+      const {ageHistogramData, sexPieData, fareHistogramData, survivedChartData} = wrangleData(filtered);
       ageHistogram(ageHistogramData);
       sexPieChart(sexPieData);
-      // TODO update also the new charts with the wrangled data
+      fareHistogram(fareHistogramData);
+      survivedChart(survivedChartData)
       
       d3.select('#selectedSex').text(state.selectedSex || 'None');
       // TODO also update the label for the selected survived state

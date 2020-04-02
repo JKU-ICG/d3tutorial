@@ -193,6 +193,12 @@
         cscale.domain(new_data.map((d) => d.key));
 
         // TODO specify interpolation function
+        const oldData = g.selectAll('path').data();
+
+        const tweenArc = (d, i) => {
+          const interpolate = d3.interpolateObject(oldData[i], d);
+          return (t) => arc(interpolate(t));
+        };
         
         // DATA JOIN
         const path = g.selectAll('path').data(pied, (d) => d.data.key).join(
@@ -217,8 +223,9 @@
         // both old and new elements
         path
           .classed('selected', (d) => d.data.key === state[stateAttr])
-          .attr('d', arc) // TODO Update with animation
-          .style('fill', (d) => cscale(d.data.key));
+          .style('fill', (d) => cscale(d.data.key))
+          .transition()
+          .attrTween('d', tweenArc);
 
         path.select('title').text((d) => `${d.data.key}: ${d.data.values.length}`);
       }

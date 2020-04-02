@@ -58,7 +58,7 @@
       <option value="2">2nd Class</option>
       <option value="3">3rd Class</option>
     </select>
-    <!--TODO add label for the currently selected sex-->
+    Selected Gender: <span id="selectedGender"></span>
   </div>
 
   <main>
@@ -76,7 +76,7 @@
     const state = {
       data: [],
       passengerClass: "",
-      // TODO store selected sex
+      selectedGender: null
     };
 
 
@@ -186,7 +186,15 @@
           // new elements
           (enter) => {
             const path_enter = enter.append('path');
-            // TODO register click handler to change selected sex in state and call updateApp()
+            path_enter.on('click', (d) => {
+              if (state.selectedGender === d.data.key) {
+                state.selectedGender = null;
+              } else {
+                state.selectedGender = d.data.key;
+              }
+
+              updateApp();
+            })
             path_enter.append('title');
             return path_enter;
           }
@@ -195,7 +203,8 @@
         // ENTER + UPDATE
         // both old and new elements
         path
-          .attr('d', arc) // TODO set the CSS class `selected` if the current data item is the selected sex in the state
+          .classed('selected', (d) => d.data.key === state.selectedGender)
+          .attr('d', arc)
           .style('fill', (d) => cscale(d.data.key));
 
         path.select('title').text((d) => `${d.data.key}: ${d.data.values.length}`);
@@ -214,7 +223,10 @@
         if (state.passengerClass && d.pclass !== state.passengerClass) {
           return false;
         }
-        // TODO apply additional selected sex filter
+
+        if (state.selectedGender && d.sex !== state.selectedGender) {
+          return false;
+        }
         return true;
       });
     }

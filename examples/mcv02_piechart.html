@@ -168,10 +168,31 @@
       const g = svg.append('g')
         .attr('transform', `translate(${radius + margin},${radius + margin})`);
 
-      // 1. TODO
+      // prepare function Data for pie chart
+      const pieDataTransform = d3.pie().value((d) => d.values.length);
+      // define arc function
+      const calcArc = d3.arc().outerRadius(radius).innerRadius(0);
+      // set a color scheme
+      const colorScale = d3.scaleOrdinal(d3.schemeAccent);
 
       function update(new_data) { //{key: string, values: IPerson[]}[]
-        // TODO apply layout and render pie
+      const pieData = pieDataTransform(new_data);
+      colorScale.domain(new_data.map((d) => d.key));
+      
+        // JOIN (Enter)
+        const arcs = g.selectAll('.arc').data(pieData, (d) => d.data.key).join(
+          (enter) => {
+            const newArcs = enter.append('path').classed('arc', true)
+            .style('stroke', 'white');
+            newArcs.append('title');
+            return newArcs;
+          }
+        );
+
+        // Update
+        arcs.attr('d', (d) => calcArc(d))
+        .style('fill', (d) => colorScale(d.data.key));
+
       }
 
       return update;
