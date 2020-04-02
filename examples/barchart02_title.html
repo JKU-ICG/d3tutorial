@@ -54,7 +54,11 @@
   const rect = g.selectAll('rect').data(data).join(
     // ENTER
     // new elements
-    (enter) => enter.append('rect').attr('x', 0),
+    (enter) => {
+      const newRect = enter.append('rect').attr('x', 0);
+      newRect.append('title');
+      return newRect;
+    },
     // UPDATE
     // update existing elements
     (update) => update,
@@ -69,6 +73,8 @@
     .attr('height', bar_height)
     .attr('width', (d) => d * 7)
     .attr('y', (d, i) => i*(bar_height+5));
+
+  rect.select('title').text((d) => 'The value is: ' + d);
   </script>
 </body>
 </html>

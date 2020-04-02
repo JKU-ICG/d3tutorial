@@ -50,6 +50,15 @@
   // x a linear scale with range: [0, width] and domain from 0 max temperature
   // y a band ordinal scale range: [0, height] and domain the different cities
 
+  const xScale = d3.scaleLinear().range([0, width]);
+  const yScale = d3.scaleBand().range([0, height]).paddingInner(0.1);
+
+  const xAxis = d3.axisTop().scale(xScale);
+  const yAxis = d3.axisLeft().scale(yScale);
+
+  const xAxisContainer = g.append('g').classed('x axis', true);
+  const yAxisContainer = g.append('g').classed('y axis', true);
+
 
   d3.json('weather.json').then((json) => {
     data = json;
@@ -59,6 +68,11 @@
 
   function update(new_data) {
     // Render the chart with new data
+    xScale.domain([0, d3.max(new_data, (d) => d.temperature)]);
+    yScale.domain(new_data.map((cityObj) => cityObj.location.city));
+
+    xAxisContainer.call(xAxis);
+    yAxisContainer.call(yAxis);
 
     // DATA JOIN
     const rect = g.selectAll('rect').data(new_data).join(
@@ -80,9 +94,9 @@
     // ENTER + UPDATE
     // both old and new elements
     rect
-      .attr('height', bar_height)
-      .attr('width', (d) => d.temperature * 7)
-      .attr('y', (d, i) => i*(bar_height+5));
+      .attr('height', yScale.bandwidth())
+      .attr('width', (d) => xScale(d.temperature))
+      .attr('y', (d, i) => yScale(d.location.city));
 
     rect.select('title').text((d) => d.location.city);
   }

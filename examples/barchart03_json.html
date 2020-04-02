@@ -41,7 +41,7 @@
               .attr('transform', `translate(${margin.left},${margin.top})`);
 
   // Global variable for all data
-  const data = [66.38, 21.51, 23.37, 34.17, 36.21];
+  // const data = [66.38, 21.51, 23.37, 34.17, 36.21];
 
   const bar_height = 50;
 
@@ -51,32 +51,35 @@
   // the `location.city` as `title`
 
   // Render the chart with new data
+  function update(data) {
+    // DATA JOIN
+    const rect = g.selectAll('rect').data(data).join(
+      // ENTER
+      // new elements
+      (enter) => {
+        const rect_enter = enter.append('rect').attr('x', 0);
+        rect_enter.append('title');
+        return rect_enter;
+      },
+      // UPDATE
+      // update existing elements
+      (update) => update,
+      // EXIT
+      // elements that aren't associated with data
+      (exit) => exit.remove()
+      );
 
-  // DATA JOIN
-  const rect = g.selectAll('rect').data(data).join(
-    // ENTER
-    // new elements
-    (enter) => {
-      const rect_enter = enter.append('rect').attr('x', 0);
-      rect_enter.append('title');
-      return rect_enter;
-    },
-    // UPDATE
-    // update existing elements
-    (update) => update,
-    // EXIT
-    // elements that aren't associated with data
-    (exit) => exit.remove()
-    );
+    // ENTER + UPDATE
+    // both old and new elements
+    rect
+      .attr('height', bar_height)
+      .attr('width', (d) => d.temperature * 7)
+      .attr('y', (d, i) => i*(bar_height+5));
 
-  // ENTER + UPDATE
-  // both old and new elements
-  rect
-    .attr('height', bar_height)
-    .attr('width', (d) => d * 7)
-    .attr('y', (d, i) => i*(bar_height+5));
+    rect.select('title').text((d) => `City: ${d.location.city}`);
+  }
 
-  rect.select('title').text((d) => `value: ${d}`);
+  d3.json('weather.json').then((json) => update(json));
   </script>
 </body>
 </html>

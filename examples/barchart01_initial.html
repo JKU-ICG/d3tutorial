@@ -51,6 +51,17 @@
   // width = d*7
   // y = i*(bar_height+5)
 
+  const rect = g.selectAll('rect').data(data)
+    .join(
+      (enter) => enter.append('rect').attr('x', 0),
+      (update) => update,
+      (exit) => exit.remove()
+    );
+
+  rect.attr('height', bar_height)
+      .attr('width', (d) => d * 7)
+      .attr('y', (d, i) => i*(bar_height+5));
+
   // Render the chart with new data
 
   // DATA JOIN

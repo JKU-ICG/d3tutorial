@@ -112,7 +112,15 @@
   d3.select('#filter-us-only').on('change', function() {
     // This will be triggered when the user selects or unselects the checkbox
     const checked = d3.select(this).property('checked');
-
+    console.log('is the checkbox checked?', checked);
+    if (checked === true) {
+      /// remove non-us cities
+      const usCities = data.filter((cityData) => cityData.location.country === 'US');
+      update(usCities);
+    } else {
+      // show all cities
+      update(data);
+    }
   });
 
   </script>
