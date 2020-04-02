@@ -1067,7 +1067,7 @@ Final Outcome: [mcv06_final.html](examples/mcv06_final.html) ([Open in CodePen](
 
 D3 provides way more that has not been covered in this tutorial including:
 
-- Geo Projection: GeoJSON, TopoJSON, Projection: https://github.com/mbostock/d3/wiki/Geo-Projections
+- Geo Projection: https://observablehq.com/collection/@d3/d3-geo-projection
 - Time: Scales, Formatting/Parsing, ...
 - Behaviors:
   - Zoom
